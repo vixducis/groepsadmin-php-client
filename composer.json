@@ -1,0 +1,26 @@
+{
+    "name": "wouterh/groepsadmin-client",
+    "description": "A wrapper package for the \"scouts en gidsen vlaanderen\" groepsadmin api in PHP.",
+    "type": "library",
+    "license": "GNU GPLv3",
+    "autoload": {
+        "psr-4": {
+            "Wouterh\\GroepsadminClient\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Wouter Henderickx",
+            "email": "wouter.henderikx@gmail.com"
+        }
+    ],
+    "require": {
+        "league/oauth2-client": "^2.6",
+        "guzzlehttp/guzzle": "^7.3"
+    },
+    "config": {
+      "platform": {
+          "php": "8.0.0"
+      }
+    }
+}
