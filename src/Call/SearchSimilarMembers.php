@@ -6,6 +6,16 @@ use Wouterh\GroepsadminClient\Model\Member;
 
 class SearchSimilarMembers extends CallBase
 {
+    private const API_TRANSLATION_FUNCTIONS = [
+        'id' => 'setId',
+        'gsm' => 'setMobilePhone',
+        'geboortedatum' => 'setBirthDate',
+        'email' => 'setMail',
+        'achternaam' => 'setLastName',
+        'telefoon' => 'setPhone',
+        'voornaam' => 'setFirstName',
+    ];
+
     /**
      * Searches for members in the groepsadmin by a first and last name.
      * Returns an array of members that match the query.
@@ -24,7 +34,8 @@ class SearchSimilarMembers extends CallBase
         );
         $output = [];
         foreach ($content['leden'] as $memberContent) {
-            $output[] = Member::fromApi($memberContent);
+            var_dump($memberContent);
+            $output[] = Member::fromApi($memberContent, self::API_TRANSLATION_FUNCTIONS);
         }
 
         return $output;

@@ -8,6 +8,19 @@ class GetMemberlist extends CallBase
 {
     use OffsetTrait;
 
+    private const API_TRANSLATION_FUNCTIONS = [
+        'id' => 'setId',
+        'waarden' => [
+            'gsm' => 'setMobilePhone',
+            'geboortedatum' => 'setBirthDate',
+            'email' => 'setMail',
+            'achternaam' => 'setLastName',
+            'telefoon' => 'setPhone',
+            'voornaam' => 'setFirstName',
+            'lidnummer' => 'setMemberNumber'
+        ]
+    ];
+
     /**
      * Retrieves the list with all members and returns it.
      * Please note that only a limited number of members will be fetched.
@@ -27,7 +40,7 @@ class GetMemberlist extends CallBase
         );
         $output = [];
         foreach ($content['leden'] as $memberContent) {
-            $output[] = Member::fromApi($memberContent);
+            $output[] = Member::fromApi($memberContent, self::API_TRANSLATION_FUNCTIONS);
         }
 
         $this->increaseOffset(count($content['leden']));

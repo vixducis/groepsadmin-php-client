@@ -6,6 +6,8 @@ use DateTime;
 
 class Member
 {
+    use LoadFromApiTrait;
+
     private ?string $id = null;
     private ?string $firstname = null;
     private ?string $lastname = null;
@@ -13,7 +15,6 @@ class Member
     private ?PhoneNumber $mobile = null;
     private ?PhoneNumber $phone = null;
     private ?DateTime $birthDate = null;
-    private ?string $AddressLine1 = null;
     private ?string $memberNumber = null;
 
     /**
@@ -158,24 +159,6 @@ class Member
     }
 
     /**
-     * Returns the first line of the member's home address.
-     * @return string|null
-     */
-    public function getAddressLine1(): ?string
-    {
-        return $this->AddressLine1;
-    }
-
-    /**
-     * Sets the first line of the member's home address.
-     * @param string $address
-     */
-    public function setAddressLine1(string $address): void
-    {
-        $this->AddressLine1 = $address;
-    }
-
-    /**
      * Returns the member number.
      * @return string|null
      */
@@ -194,39 +177,13 @@ class Member
     }
 
     /**
-     * Factory method that creates a new member from the content of an API call.
-     * @param array $content
+     * Factory method that creates a new member from an API call
+     * @param array $content The content of the API call
+     * @param array $format An array that mimics the layout of the API response where the values are the names of the setter functions. Indexes should not contain any prefixes (like vvksm.) or the 'Column' postfix. Matching is done case-insensitive.
      * @return Member
      */
-    public static function fromApi(array $content): Member
+    public static function fromApi(array $content, array $format): Member
     {
-        $member = new Member;
-        $member->setId($content['id']);
-
-        if (array_key_exists('waarden', $content)) {
-            // map the values in the api content to setters
-            $translationFunctions = [
-                'gsm' => 'setMobilePhone',
-                'geboortedatum' => 'setBirthDate',
-                'email' => 'setMail',
-                'achternaam' => 'setLastName',
-                'telefoon' => 'setPhone',
-                'voornaam' => 'setFirstName',
-                'straat' => 'setAddressLine1',
-                'lidnummer' => 'setMemberNumber',
-            ];
-
-            foreach($content['waarden'] as $key => $value) {
-                $keyParts = explode('.', $key);
-                $key = array_pop($keyParts);
-                $key = strtolower(preg_replace('/Column$/', '', $key));
-                if (array_key_exists($key, $translationFunctions)) {
-                    $function = $translationFunctions[$key];
-                    $member->$function($value);
-                }
-            }
-        }
-
-        return $member;
+        return self::loadFromApi(new Member, $format, $content);
     }
 }
