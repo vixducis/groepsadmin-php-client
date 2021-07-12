@@ -26,7 +26,7 @@ trait LoadFromApiTrait
             $key = strtolower(preg_replace('/Column$/', '', $key));
 
             if (array_key_exists($key, $translations)) {
-                if (is_array($value)) {
+                if (is_array($translations[$key])) {
                     $object = self::loadFromApi($object, $translations[$key], $value);
                 } else {
                     $method = $translations[$key];

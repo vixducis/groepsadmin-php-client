@@ -4,7 +4,7 @@ namespace Wouterh\GroepsadminClient\Call;
 
 use Wouterh\GroepsadminClient\Model\Member;
 
-class getMember extends CallBase
+class GetMember extends CallBase
 {
     private const API_TRANSLATION_FUNCTIONS = [
         'id' => 'setId',
@@ -19,7 +19,9 @@ class getMember extends CallBase
         ],
         'persoonsgegevens' => [
             'gsm' =>  'setMobilePhone'
-        ]
+        ],
+        'adressen' => 'setAddresses',
+        'contacten' => 'setContacts'
     ];
 
     /**
@@ -29,7 +31,7 @@ class getMember extends CallBase
      */
     public function perform(string $id): Member
     {
-        $content = json_decode($this->performCall("/lid/$id")->getBody()->getContents(), true);
+        $content = json_decode($this->performCall("lid/$id")->getBody()->getContents(), true);
         return Member::fromApi($content, self::API_TRANSLATION_FUNCTIONS);
     }
 }

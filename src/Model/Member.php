@@ -8,14 +8,16 @@ class Member
 {
     use LoadFromApiTrait;
 
-    private ?string $id = null;
-    private ?string $firstname = null;
-    private ?string $lastname = null;
-    private ?string $mail = null;
-    private ?PhoneNumber $mobile = null;
-    private ?PhoneNumber $phone = null;
-    private ?DateTime $birthDate = null;
-    private ?string $memberNumber = null;
+    protected ?string $id = null;
+    protected ?string $firstname = null;
+    protected ?string $lastname = null;
+    protected ?string $mail = null;
+    protected ?PhoneNumber $mobile = null;
+    protected ?PhoneNumber $phone = null;
+    protected ?DateTime $birthDate = null;
+    protected ?string $memberNumber = null;
+    protected array $addresses = []; 
+    protected array $contacts = [];
 
     /**
      * Returns the member's groepsadmin ID
@@ -147,13 +149,15 @@ class Member
         if ($date instanceof DateTime) {
             $this->birthDate = $date;
         } else {
-            $this->birthDate = new DateTime();
+            $this->birthDate = new DateTime($date);
+            /*
             $dateComponents = explode('/', $date);
             $this->birthDate->setDate(
                 (int)$dateComponents[2],
                 (int)$dateComponents[1],
                 (int)$dateComponents[0],
             );
+            */
             $this->birthDate->setTime(12, 0);
         }
     }
@@ -174,6 +178,45 @@ class Member
     public function setMemberNumber(string $number): void
     {
         $this->memberNumber = $number;
+    }
+
+    /**
+     * Returns the addresses for the member
+     * @return Address[]
+     */
+    public function getAddresses(): array
+    {
+        return $this->addresses;
+    }
+
+    /**
+     * Sets the addresses of the member
+     * @param Address[]|array $addresses
+     */
+    public function setAddresses(array $addresses): void
+    {
+        $this->addresses = [];
+        foreach ($addresses as $address) {
+            if (!$address instanceof Address) {
+                $address = Address::fromApi($address);
+            }
+            $this->addresses[] = $address;
+        }
+    }
+
+    /**
+     * Sets the contacts of the member
+     * @param Contact[]|array $contacts
+     */
+    public function setContacts(array $contacts): void
+    {
+        $this->contacts = [];
+        foreach ($contacts as $contact) {
+            if (!$contact instanceof Contact) {
+                $contact = Contact::fromApi($contact, $this->getAddresses());
+            }
+            $this->contacts[] = $contact;
+        }
     }
 
     /**
