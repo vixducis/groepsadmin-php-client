@@ -137,6 +137,7 @@ class Contact
      * A factory method that returns a new Contact object based on the content of an API call.
      * @param array $content
      * @param Address[] $addresses Possible addresses to match the address id to.
+     * @return Contact
      */
     public static function fromApi(array $content, array $addresses = []): Contact
     {

@@ -12,29 +12,32 @@ class PhoneNumber
 
     public function __construct(string $number)
     {
-		$number = trim($number);
-		
-		// if the international format is used, + or ++ can be used as a prefix
-		// if only a single + is used, prepend a second
-		if ($number[0] == '+' && $number[1] != '+') {
-            $number = '+' . $number;
+        if (strlen($number)) {
+            $number = trim($number);
+        
+            // if the international format is used, + or ++ can be used as a prefix
+            // if only a single + is used, prepend a second
+            if ($number[0] == '+' && $number[1] != '+') {
+                $number = '+' . $number;
+            }
+        
+            // replace all special characters with spaces and + signs with zeros
+            $number = strtr($number, '+/-.', '0   ');
+        
+            // remove spaces
+            $number = str_replace(' ', '', $number);
+        
+            // check if number starts with 0032, if so replace by 0
+            if (substr($number, 0, 4) === '0032') {
+                $number = '0' . substr($number, 4);
+            }
+        
+            // check if the number is a mobile one
+            if (substr($number, 0, 2) === '04') {
+                $this->mobile = true;
+            }
+            $this->number = $number;
         }
-        
-        // replace all special characters with spaces and + signs with zeros
-        $number = strtr($number, '+/-.', '0   ');
-        
-        // remove spaces 
-        $number = str_replace(' ', '', $number);
-        
-        // check if number starts with 0032, if so replace by 0
-        if(substr($number, 0, 4) === '0032')
-			$number = '0' . substr($number, 4);
-		
-        // check if the number is a mobile one
-        if (substr($number, 0, 2) === '04') {
-            $this->mobile = true;
-        }
-		$this->number = $number;
     }
 
     /**

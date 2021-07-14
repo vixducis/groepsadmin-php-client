@@ -3,6 +3,7 @@
 namespace Wouterh\GroepsadminClient\Model;
 
 use DateTime;
+use DeflateContext;
 
 class Member
 {
@@ -16,8 +17,9 @@ class Member
     protected ?PhoneNumber $phone = null;
     protected ?DateTime $birthDate = null;
     protected ?string $memberNumber = null;
-    protected array $addresses = []; 
-    protected array $contacts = [];
+    protected ?array $addresses = null; 
+    protected ?array $contacts = null;
+    protected ?array $functions = null;
 
     /**
      * Returns the member's groepsadmin ID
@@ -182,9 +184,9 @@ class Member
 
     /**
      * Returns the addresses for the member
-     * @return Address[]
+     * @return Address[]|null
      */
-    public function getAddresses(): array
+    public function getAddresses(): ?array
     {
         return $this->addresses;
     }
@@ -216,6 +218,46 @@ class Member
                 $contact = Contact::fromApi($contact, $this->getAddresses());
             }
             $this->contacts[] = $contact;
+        }
+    }
+
+    /**
+     * Returns the functions assigned to this member
+     * @return MemberFunction[]|null
+     */
+    public function getFunctions(): ?array
+    {
+        return $this->functions;
+    }
+
+    /**
+     * Returns the fucntions assigned to the member that are still active
+     * @return MemberFunction[]|null
+     */
+    public function getActiveFunctions(): ?array
+    {
+        if ($this->getFunctions() === null) {
+            return null;
+        }
+
+        return array_filter(
+            $this->getFunctions(), 
+            fn($func) => $func->getEnd() === null
+        );
+    }
+
+    /**
+     * Sets the function that the member has
+     * @param MemberFunction[]|array $functions
+     */
+    public function setFunctions(array $functions): void
+    {
+        $this->functions = [];
+        foreach ($functions as $function) {
+            if (!$function instanceof MemberFunction) {
+                $function = MemberFunction::fromApi($function);
+            }
+            $this->functions[] = $function;
         }
     }
 

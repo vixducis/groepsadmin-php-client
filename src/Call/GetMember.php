@@ -21,7 +21,8 @@ class GetMember extends CallBase
             'gsm' =>  'setMobilePhone'
         ],
         'adressen' => 'setAddresses',
-        'contacten' => 'setContacts'
+        'contacten' => 'setContacts',
+        'functies' => 'setFunctions'
     ];
 
     /**

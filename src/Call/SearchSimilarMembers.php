@@ -34,7 +34,6 @@ class SearchSimilarMembers extends CallBase
         );
         $output = [];
         foreach ($content['leden'] as $memberContent) {
-            var_dump($memberContent);
             $output[] = Member::fromApi($memberContent, self::API_TRANSLATION_FUNCTIONS);
         }
 
